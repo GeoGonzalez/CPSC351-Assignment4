@@ -4,10 +4,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
-<<<<<<< HEAD
 #include <string.h>
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -28,11 +25,7 @@ struct record
 	/* The first name */	
 	string firstName;
 		
-<<<<<<< HEAD
 	/* The last name */
-=======
-	/* The first name */
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 	string lastName;	
 };
 
@@ -52,26 +45,16 @@ class hashTableCell
 	hashTableCell()
 	{
 		/* Initialize the mutex using pthread_mutex_init() */
-<<<<<<< HEAD
 		pthread_mutex_init( &cellMutex, NULL );
 	}
 	
 	/**
  	 * Deallocate the mutex
-=======
-	}
-	
-	/**
- 	 * Initialize the mutex
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
  	 */
 	~hashTableCell()
 	{
 		/* Deallocate the mutex using pthread_mutex_destroy() */
-<<<<<<< HEAD
 		pthread_mutex_destroy( &cellMutex );
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 	}
 	
 	/**
@@ -80,10 +63,7 @@ class hashTableCell
 	void lockCell()
 	{
 		/*TODO: Add code for locking the cell mutex */
-<<<<<<< HEAD
 		pthread_mutex_lock( &cellMutex );
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 	}
 	
 	/**
@@ -92,10 +72,7 @@ class hashTableCell
 	void unlockCell()
 	{
 		/* TODO: Add code for unlocking the cell mutex */
-<<<<<<< HEAD
 		pthread_mutex_unlock( &cellMutex );
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 	}
 
 		
@@ -107,12 +84,8 @@ class hashTableCell
 	/**
  	 * TODO: declare a cell mutex
  	 */
-<<<<<<< HEAD
 	pthread_mutex_t cellMutex;
 
-=======
-	
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 };
 
 /* The number of cells in the hash table */
@@ -136,28 +109,19 @@ list<int> idsToLookUpList;
 /**
  * TODO: Declare and initialize a mutex for protecting the idsToLookUpList.
  */
-<<<<<<< HEAD
 pthread_mutex_t idsToLookUpListMutex = PTHREAD_MUTEX_INITIALIZER;
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 
 /**
  * TODO: declare and initialize the condition variable, threadPoolCondVar, 
  * for implementing a thread pool.
  */
-<<<<<<< HEAD
 pthread_cond_t threadPoolCondVar = PTHREAD_COND_INITIALIZER;
 
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 
 /* TODO: Declare the mutex, threadPoolMutex, for protecting the thread pool
  * condition variable. 
  */
-<<<<<<< HEAD
 pthread_mutex_t threadPoolMutex = PTHREAD_MUTEX_INITIALIZER;
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 
 
 /**
@@ -179,12 +143,9 @@ void cleanUp(int sig)
 {
 
 	/* Add code for deallocating the queue */
-<<<<<<< HEAD
 	msgctl( msqid, IPC_RMID, NULL );
 
 	exit( 0 );
-=======
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 }
 
 /**
@@ -242,25 +203,15 @@ void addToHashTable(const record& rec)
 	/**
  	 * TODO: grab mutex of the hash table cell
  	 */
-<<<<<<< HEAD
 	hashTable.at( rec.id % NUMBER_OF_HASH_CELLS ).lockCell();
 	
 	/* Hash, and save the record */
 	hashTable.at( rec.id % NUMBER_OF_HASH_CELLS ).recordList.push_back(rec);
-=======
-	
-	/* Hash, and save the record */
-	hashTable.at(rec.id % NUMBER_OF_HASH_CELLS).recordList.push_back(rec);
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 	
 	/**
  	 * TODO: release mutex of the hashtable cell
  	 */
-<<<<<<< HEAD
 	hashTable.at( rec.id % NUMBER_OF_HASH_CELLS ).unlockCell();
-=======
-	
->>>>>>> 7f2ad8cd6ad55439cd46768ee0cbf16c7a3ac4ed
 }
 
 
