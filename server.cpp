@@ -234,7 +234,7 @@ record getHashTableRecord(const int& id)
 	/**
  	 * TODO: grab mutex of the cell
  	 */
-	
+	hashTableCellPtr->lockCell();
 	/* Get the iterator to the list of records hashing to this location */
 	list<record>::iterator recIt = hashTableCellPtr->recordList.begin();
 	
@@ -259,6 +259,7 @@ record getHashTableRecord(const int& id)
  	 * TODO: release mutex of the cell. Hint: call unlockCell() to release
      *       mutex protecting the cell.
  	 */
+	hashTableCellPtr->unlockCell();
 	
 	return rec;
 }
@@ -316,6 +317,7 @@ int getIdsToLookUp()
 	/* The id */
 	int id = -1;
 	
+	pthread_mutex_lock(&idsToLookUpListMutex);
 	/* TODO: Aquire the idsToLookUpListMutex mutex */
 	
 	/* Remove id from the list if exists */
@@ -325,6 +327,7 @@ int getIdsToLookUp()
         idsToLookUpList.pop_front(); 
     }
 	
+	pthread_mutex_unlock(&idsToLookUpListMutex);
 	/* TODO: Release idsToLookUpListMutex  */
 	
 	return id;
@@ -336,6 +339,7 @@ int getIdsToLookUp()
  */
 void addIdsToLookUp(const int& id)
 {
+	pthread_mutex_lock(&idsToLookUpListMutex);
 	/* TODO: Aquire idsToLookUpListMutex the list mutex */
 	
 		
@@ -343,6 +347,7 @@ void addIdsToLookUp(const int& id)
 	idsToLookUpList.push_back(id);
 		
 	/* TODO: Release the idsToLookUpList  */
+	pthread_mutex_unlock(&idsToLookUpListMutex);
 }
 
 /**
@@ -357,7 +362,7 @@ void* threadPoolFunc(void* arg)
 	/* Sleep until work arrives */
 	while(true)
 	{
-
+		pthread_mutex_lock(&threadPoolMutex); 
 		/* TODO: Lock the mutex protecting threadPoolCondVar from race conditions */
 		
 		/* Get the id to look up */
