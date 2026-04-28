@@ -374,7 +374,7 @@ void* threadPoolFunc(void* arg)
 				
 			
 			/* TODO: Sleep on the condition variable threadPoolCondVar */
-			
+			pthread_cond_wait(&threadPoolCondVar, &threadPoolMutex);
 			/* Get the id to look up */
 			id = getIdsToLookUp();	
 			
@@ -382,7 +382,7 @@ void* threadPoolFunc(void* arg)
 		
 		
 		/* TODO: Release the mutex protecting threadPoolCondVar from race conditions */
-		
+		pthread_mutex_unlock(&threadPoolMutex);
 			
 		/* Look up id */
 		record rec = getHashTableRecord(id);
@@ -401,7 +401,9 @@ void* threadPoolFunc(void* arg)
 void wakeUpThread()
 {
 	
-
+	pthread_mutex_lock(&threadPoolMutex);
+	pthread_cond_signal(&threadPoolCondVar);
+	pthread_mutex_unlock(&threadPoolMutex);
 	/* TODO: Lock the mutex protecting threadPoolCondVar from race conditions */
 
 	/* TODO: Wake up a thread sleeping on threadPoolCondVar */
@@ -416,7 +418,10 @@ void wakeUpThread()
 void createThreads(const int& numThreads)
 {
 	/** TODO: create numThreads threads that call threadPoolFunc() */
-	
+	pthread_t tid;
+	for (int i=0; i < numThreads; i++) {
+		pthread_create(&tid, NULL, threadPoolFunc, NULL);
+	}
 }
 
 /**
@@ -429,6 +434,11 @@ void createInserterThreads()
 	/* TODO: create NUM_INSERTERS threads that add new elements to the hashtable
  	 * by calling addNewRecords(). 
  	 */
+		pthread_t tid;
+	for (int i=0; i < NUM_INSERTERS; i++) {
+		pthread_create(&tid, NULL, addNewRecords, NULL);
+	}
+
 }
 
 
@@ -452,7 +462,7 @@ void processIncomingMessages()
 		
 		/* TODO: Add id to the list of ids that should be processed */
 		addIdsToLookUp(msg.id);
-			
+		wakeUpThread();
 		/* TODO: Wake up a thread to process the newly received id */
 	}
 }
@@ -509,7 +519,7 @@ int main(int argc, char** argv)
 	}
 	
 	/* TODO: install a signal handler for deallocating the message queue */	
-	
+	signal(SIGINT, cleanUp);
 	/* Populate the hash table */
 	populateHashTable(argv[1]);
 	
